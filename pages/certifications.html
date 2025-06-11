@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certifications - NYS ITS Required Forms</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Certifications</h1>
+        <form id="certificationsForm">
+            <div class="form-section">
+                <h2>MacBride Fair Employment Principles</h2>
+                <div class="form-group">
+                    <label class="required">Does your business have operations in Northern Ireland?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="niOperationsYes" name="niOperations" value="yes" required>
+                            <label for="niOperationsYes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="niOperationsNo" name="niOperations" value="no" required>
+                            <label for="niOperationsNo">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="macbrideCompliance">
+                    <label class="required">Will you take lawful steps to conduct business in Northern Ireland in accordance with MacBride Fair Employment Principles?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="macbrideYes" name="macbrideCompliance" value="yes" required>
+                            <label for="macbrideYes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="macbrideNo" name="macbrideCompliance" value="no" required>
+                            <label for="macbrideNo">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>New York State Business Utilization</h2>
+                <div class="form-group">
+                    <label class="required">Will New York State Businesses be used in the performance of this Contract?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="nysBusinessYes" name="nysBusinessUtilization" value="yes" required>
+                            <label for="nysBusinessYes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="nysBusinessNo" name="nysBusinessUtilization" value="no" required>
+                            <label for="nysBusinessNo">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="nysBusinessDetails" style="display: none;">
+                    <label for="nysBusinessInfo">Identify New York State Business(es) that will be used:</label>
+                    <textarea id="nysBusinessInfo" name="nysBusinessInfo" rows="4"></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Executive Order No. 16 - Russia Business Operations</h2>
+                <div class="form-group">
+                    <label class="required">Select one of the following:</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="russiaOps1" name="russiaOperations" value="none" required>
+                            <label for="russiaOps1">No, Vendor does not conduct business operations in Russia</label>
+                        </div>
+                        
+                        <div class="radio-option">
+                            <input type="radio" id="russiaOps2a" name="russiaOperations" value="winding-down">
+                            <label for="russiaOps2a">Yes, but winding down operations</label>
+                        </div>
+                        
+                        <div class="radio-option">
+                            <input type="radio" id="russiaOps2b" name="russiaOperations" value="vital-services">
+                            <label for="russiaOps2b">Yes, but only for vital health/safety services or federal compliance</label>
+                        </div>
+                        
+                        <div class="radio-option">
+                            <input type="radio" id="russiaOps3" name="russiaOperations" value="active">
+                            <label for="russiaOps3">Yes, Vendor conducts business operations in Russia</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="russiaDetails" style="display: none;">
+                    <label for="russiaOperationsDetails">Please provide detailed description:</label>
+                    <textarea id="russiaOperationsDetails" name="russiaOperationsDetails" rows="4"></textarea>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <a href="key-personnel.html" class="button secondary">Previous</a>
+                <a href="final-summary.html" class="button" onclick="return handleFormNavigation(event, 'next')">Next</a>
+            </div>
+        </form>
+    </div>
+    <script src="../js/script.js"></script>
+    <script>
+        function handleRadioSelection(radio) {
+            // Remove selected class from all options in the group
+            const groupOptions = radio.closest('.radio-group').querySelectorAll('.radio-option');
+            groupOptions.forEach(option => option.classList.remove('selected'));
+            
+            // Add selected class to the chosen option
+            radio.closest('.radio-option').classList.add('selected');
+        }
+
+        // Add click handlers to all radio options
+        document.querySelectorAll('.radio-option input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                handleRadioSelection(this);
+            });
+        });
+
+        // Handle Northern Ireland operations
+        const macbrideComplianceSection = document.getElementById('macbrideCompliance');
+        macbrideComplianceSection.style.display = 'none'; // Initially hide the section
+        
+        document.getElementsByName('niOperations').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Show/hide MacBride compliance section based on selection
+                if (this.value === 'yes') {
+                    macbrideComplianceSection.style.display = 'block';
+                    // Make the radio buttons required when visible
+                    macbrideComplianceSection.querySelectorAll('input[type="radio"]').forEach(r => r.required = true);
+                } else {
+                    macbrideComplianceSection.style.display = 'none';
+                    // Clear and make not required when hidden
+                    macbrideComplianceSection.querySelectorAll('input[type="radio"]').forEach(r => {
+                        r.checked = false;
+                        r.required = false;
+                    });
+                    macbrideComplianceSection.querySelectorAll('.radio-option').forEach(opt => 
+                        opt.classList.remove('selected')
+                    );
+                }
+            });
+        });
+
+        // Check initial state on page load
+        const initialNISelection = document.querySelector('input[name="niOperations"]:checked');
+        if (initialNISelection && initialNISelection.value === 'yes') {
+            macbrideComplianceSection.style.display = 'block';
+        }
+
+        // Handle NYS Business utilization
+        document.getElementsByName('nysBusinessUtilization').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const detailsSection = document.getElementById('nysBusinessDetails');
+                detailsSection.style.display = this.value === 'yes' ? 'block' : 'none';
+                
+                // Clear textarea when hiding the section
+                if (this.value === 'no') {
+                    detailsSection.querySelector('textarea').value = '';
+                }
+            });
+        });
+
+        // Handle Russia operations
+        document.getElementsByName('russiaOperations').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const detailsSection = document.getElementById('russiaDetails');
+                const needsDetails = ['winding-down', 'vital-services'].includes(this.value);
+                detailsSection.style.display = needsDetails ? 'block' : 'none';
+                
+                // Clear textarea when hiding the section
+                if (!needsDetails) {
+                    detailsSection.querySelector('textarea').value = '';
+                }
+            });
+        });
+
+        // Restore visual state for any pre-selected options
+        document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+            handleRadioSelection(radio);
+        });
+    </script>
+</body>
+</html>

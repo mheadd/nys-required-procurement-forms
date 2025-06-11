@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary - NYS ITS Required Forms</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Form Submission Summary</h1>
+        <div id="summaryContent">
+            <div class="summary-section">
+                <h2>Company Information</h2>
+                <div id="companyInfo"></div>
+            </div>
+
+            <div class="summary-section">
+                <h2>Key Personnel Information</h2>
+                <div id="personnelInfo"></div>
+            </div>
+
+            <div class="summary-section">
+                <h2>Certifications</h2>
+                <div id="certificationsInfo"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Today's Date: </label>
+            <span id="currentDate"></span>
+        </div>
+
+        <div class="navigation">
+            <a href="certifications.html" class="button secondary">Previous</a>
+            <button type="button" id="generateForms" class="button">Generate Forms</button>
+        </div>
+
+        <div id="generatedForms" style="display: none;">
+            <h2>Generated Forms</h2>
+            <div id="formsContainer"></div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Display current date
+            document.getElementById('currentDate').textContent = getCurrentDate();
+
+            // Load and display stored data
+            const data = getStoredData();
+            
+            // Company Information
+            const companyInfo = document.getElementById('companyInfo');
+            companyInfo.innerHTML = `
+                <p><strong>Company Name:</strong> ${data.companyName || ''}</p>
+                <p><strong>Contractor Name:</strong> ${data.contractorName || ''}</p>
+                <p><strong>Address:</strong> ${data.streetAddress || ''}</p>
+                <p><strong>City, State, Zip:</strong> ${data.city || ''}, ${data.state || ''} ${data.zipCode || ''}</p>
+                <p><strong>Telephone:</strong> ${data.telephone || ''}</p>
+                <p><strong>Fax:</strong> ${data.fax || ''}</p>
+            `;
+
+            // Personnel Information
+            const personnelInfo = document.getElementById('personnelInfo');
+            personnelInfo.innerHTML = `
+                <p><strong>Submitter Name:</strong> ${data.submitterName || ''}</p>
+                <p><strong>Submitter Title:</strong> ${data.submitterTitle || ''}</p>
+                <p><strong>Organization Type:</strong> ${data.organizationType || ''}</p>
+            `;
+
+            if (data.organizationType === 'corporation') {
+                personnelInfo.innerHTML += `
+                    <h3>Corporate Officers</h3>
+                    <p><strong>President:</strong> ${data.presidentName || ''}</p>
+                    <p><strong>President Residence:</strong> ${data.presidentResidence || ''}</p>
+                    <p><strong>Secretary:</strong> ${data.secretaryName || ''}</p>
+                    <p><strong>Secretary Residence:</strong> ${data.secretaryResidence || ''}</p>
+                    <p><strong>Treasurer:</strong> ${data.treasurerName || ''}</p>
+                    <p><strong>Treasurer Residence:</strong> ${data.treasurerResidence || ''}</p>
+                `;
+            } else if (data.organizationType === 'partnership') {
+                personnelInfo.innerHTML += `
+                    <h3>Partnership Information</h3>
+                    <p><strong>Partners/Principals:</strong> ${data.partnersNames || ''}</p>
+                    <p><strong>Legal Residences:</strong> ${data.partnersResidences || ''}</p>
+                `;
+            }
+
+            // Certifications Information
+            const certificationsInfo = document.getElementById('certificationsInfo');
+            certificationsInfo.innerHTML = `
+                <h3>MacBride Fair Employment Principles</h3>
+                <p><strong>Operations in Northern Ireland:</strong> ${data.niOperations || ''}</p>
+                ${data.niOperations === 'yes' ? `<p><strong>MacBride Compliance:</strong> ${data.macbrideCompliance || ''}</p>` : ''}
+
+                <h3>New York State Business Utilization</h3>
+                <p><strong>Will use NYS Businesses:</strong> ${data.nysBusinessUtilization || ''}</p>
+                ${data.nysBusinessUtilization === 'yes' ? `<p><strong>NYS Businesses:</strong> ${data.nysBusinessInfo || ''}</p>` : ''}
+
+                <h3>Russia Business Operations</h3>
+                <p><strong>Status:</strong> ${data.russiaOperations || ''}</p>
+                ${['winding-down', 'vital-services'].includes(data.russiaOperations) ? 
+                    `<p><strong>Details:</strong> ${data.russiaOperationsDetails || ''}</p>` : ''}
+            `;
+
+            // Generate Forms Button Handler
+            document.getElementById('generateForms').addEventListener('click', () => {
+                // No signature logic needed
+                const data = getStoredData();
+                // Show generated forms section
+                document.getElementById('generatedForms').style.display = 'block';
+                generateFormDocuments(data);
+            });
+
+            function generateFormDocuments(data) {
+                const formsContainer = document.getElementById('formsContainer');
+                
+                // Create wrapper for all forms
+                const formsWrapper = document.createElement('div');
+                formsWrapper.className = 'generated-forms-wrapper';
+
+                // Generate Non-Collusive Bidding Certification
+                const nonCollusiveForm = generateNonCollusiveForm(data);
+                formsWrapper.appendChild(nonCollusiveForm);
+
+                // Generate MacBride Fair Employment Principles Certification
+                const macbrideForm = generateMacbrideForm(data);
+                formsWrapper.appendChild(macbrideForm);
+
+                // Generate NYS Business Utilization Form
+                const nysBusinessForm = generateNYSBusinessForm(data);
+                formsWrapper.appendChild(nysBusinessForm);
+
+                // Generate Russia Business Operations Certification
+                const russiaForm = generateRussiaForm(data);
+                formsWrapper.appendChild(russiaForm);
+
+                // Generate Sexual Harassment Prevention Certification
+                const harassmentForm = generateHarassmentForm(data);
+                formsWrapper.appendChild(harassmentForm);
+
+                // Clear existing content and add new forms
+                formsContainer.innerHTML = '';
+                formsContainer.appendChild(formsWrapper);
+
+                // Add print controls
+                const printControls = document.createElement('div');
+                printControls.className = 'print-controls no-print';
+                printControls.innerHTML = `
+                    <h3>Generated Forms</h3>
+                    <p>All required forms have been generated with your information. Please review each form carefully before printing.</p>
+                    <div class="form-actions">
+                        <button onclick="window.print()" class="button">Print All Forms</button>
+                    </div>
+                `;
+                formsContainer.insertBefore(printControls, formsWrapper);
+            }
+
+            function generateNonCollusiveForm(data) {
+                const form = document.createElement('div');
+                form.className = 'generated-form';
+                form.innerHTML = `
+                    <div class="form-header">
+                        <h2>Non-Collusive Bidding Certification</h2>
+                        <p class="form-date">Date: ${getCurrentDate()}</p>
+                    </div>
+                    <div class="form-content">
+                        <p>By submission of this bid, each bidder and each person signing on behalf of any bidder certifies, and in the case of a joint bid each party thereto certifies as to its own organization, under penalty of perjury, that to the best of his knowledge and belief:</p>
+                        
+                        <ol>
+                            <li>The prices in this bid have been arrived at independently without collusion, consultation, communication, or agreement, for the purpose of restricting competition, as to any matter relating to such prices with any other bidder or with any competitor;</li>
+                            <li>Unless otherwise required by law, the prices which have been quoted in this bid have not been knowingly disclosed by the bidder and will not knowingly be disclosed by the bidder prior to opening, directly or indirectly, to any other bidder or to any competitor; and</li>
+                            <li>No attempt has been made or will be made by the bidder to induce any other person, partnership or corporation to submit or not to submit a bid for the purpose of restricting competition.</li>
+                        </ol>
+
+                        <div class="form-section">
+                            <h3>Company Information</h3>
+                            <p><strong>Legal Business Name:</strong> ${data.companyName}</p>
+                            <p><strong>Business Address:</strong><br>
+                            ${data.streetAddress}<br>
+                            ${data.city}, ${data.state} ${data.zipCode}</p>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Authorized Representative</h3>
+                            <p><strong>Name:</strong> ${data.submitterName}</p>
+                            <p><strong>Title:</strong> ${data.submitterTitle}</p>
+                        </div>
+                    </div>
+                `;
+                return form;
+            }
+
+            function generateMacbrideForm(data) {
+                const form = document.createElement('div');
+                form.className = 'generated-form';
+                form.innerHTML = `
+                    <div class="form-header">
+                        <h2>MacBride Fair Employment Principles Certification</h2>
+                        <p class="form-date">Date: ${getCurrentDate()}</p>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-section">
+                            <h3>Business Operations in Northern Ireland</h3>
+                            <p><strong>Does the bidder have business operations in Northern Ireland?</strong> ${data.niOperations}</p>
+                            ${data.niOperations === 'yes' ? `
+                                <p><strong>Compliance with MacBride Principles:</strong> ${data.macbrideCompliance}</p>
+                                <p>The bidder shall take lawful steps in good faith to conduct any business operations in Northern Ireland in accordance with the MacBride Fair Employment Principles and shall permit independent monitoring of their compliance with such principles.</p>
+                            ` : ''}
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Company Information</h3>
+                            <p><strong>Legal Business Name:</strong> ${data.companyName}</p>
+                            <p><strong>Business Address:</strong><br>
+                            ${data.streetAddress}<br>
+                            ${data.city}, ${data.state} ${data.zipCode}</p>
+                        </div>
+                    </div>
+                `;
+                return form;
+            }
+
+            function generateNYSBusinessForm(data) {
+                const form = document.createElement('div');
+                form.className = 'generated-form';
+                form.innerHTML = `
+                    <div class="form-header">
+                        <h2>New York State Business Utilization Form</h2>
+                        <p class="form-date">Date: ${getCurrentDate()}</p>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-section">
+                            <h3>NYS Business Utilization</h3>
+                            <p><strong>Will New York State Businesses be used in the performance of this contract?</strong> ${data.nysBusinessUtilization}</p>
+                            ${data.nysBusinessUtilization === 'yes' ? `
+                                <div class="nys-business-details">
+                                    <h4>New York State Business(es) to be utilized:</h4>
+                                    <p>${data.nysBusinessInfo}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Company Information</h3>
+                            <p><strong>Legal Business Name:</strong> ${data.companyName}</p>
+                            <p><strong>Business Address:</strong><br>
+                            ${data.streetAddress}<br>
+                            ${data.city}, ${data.state} ${data.zipCode}</p>
+                        </div>
+                    </div>
+                `;
+                return form;
+            }
+
+            function generateRussiaForm(data) {
+                const form = document.createElement('div');
+                form.className = 'generated-form';
+                form.innerHTML = `
+                    <div class="form-header">
+                        <h2>Executive Order No. 16 Certification</h2>
+                        <p class="form-date">Date: ${getCurrentDate()}</p>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-section">
+                            <h3>Russia Business Operations Status</h3>
+                            <p><strong>Current Status:</strong> ${
+                                data.russiaOperations === 'none' ? 'No business operations in Russia' :
+                                data.russiaOperations === 'winding-down' ? 'Winding down operations in Russia' :
+                                data.russiaOperations === 'vital-services' ? 'Maintaining vital health/safety services or federal compliance operations' :
+                                'Active business operations in Russia'
+                            }</p>
+                            ${['winding-down', 'vital-services'].includes(data.russiaOperations) ? `
+                                <div class="russia-operations-details">
+                                    <h4>Details:</h4>
+                                    <p>${data.russiaOperationsDetails}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Company Information</h3>
+                            <p><strong>Legal Business Name:</strong> ${data.companyName}</p>
+                            <p><strong>Business Address:</strong><br>
+                            ${data.streetAddress}<br>
+                            ${data.city}, ${data.state} ${data.zipCode}</p>
+                        </div>
+                    </div>
+                `;
+                return form;
+            }
+
+            function generateHarassmentForm(data) {
+                const form = document.createElement('div');
+                form.className = 'generated-form';
+                form.innerHTML = `
+                    <div class="form-header">
+                        <h2>Sexual Harassment Prevention Certification</h2>
+                        <p class="form-date">Date: ${getCurrentDate()}</p>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-section">
+                            <p>By submission of this bid, each bidder and each person signing on behalf of any bidder certifies, and in the case of a joint bid each party thereto certifies as to its own organization, under penalty of perjury, that the bidder has and has implemented a written policy addressing sexual harassment prevention in the workplace and provides annual sexual harassment prevention training to all of its employees. Such policy shall, at a minimum, meet the requirements of section two hundred one-g of the labor law.</p>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Company Information</h3>
+                            <p><strong>Legal Business Name:</strong> ${data.companyName}</p>
+                            <p><strong>Business Address:</strong><br>
+                            ${data.streetAddress}<br>
+                            ${data.city}, ${data.state} ${data.zipCode}</p>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Authorized Representative</h3>
+                            <p><strong>Name:</strong> ${data.submitterName}</p>
+                            <p><strong>Title:</strong> ${data.submitterTitle}</p>
+                        </div>
+                    </div>
+                `;
+                return form;
+            }
+        });
+    </script>
+</body>
+</html>

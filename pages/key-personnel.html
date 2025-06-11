@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Personnel - NYS ITS Required Forms</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Key Personnel Information</h1>
+        <form id="personnelForm">
+            <div class="form-group">
+                <label for="submitterName" class="required">Name of Person Submitting Forms</label>
+                <input type="text" id="submitterName" name="submitterName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="submitterTitle" class="required">Title of Person Submitting Forms</label>
+                <input type="text" id="submitterTitle" name="submitterTitle" required>
+            </div>
+
+            <div class="form-group">
+                <label for="organizationType" class="required">Organization Type</label>
+                <select id="organizationType" name="organizationType" required>
+                    <option value="">Select organization type...</option>
+                    <option value="corporation">Corporation</option>
+                    <option value="partnership">Partnership</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Corporate Officers Section (Initially Hidden) -->
+            <div id="corporateSection" style="display: none;">
+                <h2>Corporate Officers</h2>
+                
+                <div class="form-group">
+                    <label for="presidentName">President Name</label>
+                    <input type="text" id="presidentName" name="presidentName">
+                </div>
+                <div class="form-group">
+                    <label for="presidentResidence">President Legal Residence</label>
+                    <input type="text" id="presidentResidence" name="presidentResidence">
+                </div>
+
+                <div class="form-group">
+                    <label for="secretaryName">Secretary Name</label>
+                    <input type="text" id="secretaryName" name="secretaryName">
+                </div>
+                <div class="form-group">
+                    <label for="secretaryResidence">Secretary Legal Residence</label>
+                    <input type="text" id="secretaryResidence" name="secretaryResidence">
+                </div>
+
+                <div class="form-group">
+                    <label for="treasurerName">Treasurer Name</label>
+                    <input type="text" id="treasurerName" name="treasurerName">
+                </div>
+                <div class="form-group">
+                    <label for="treasurerResidence">Treasurer Legal Residence</label>
+                    <input type="text" id="treasurerResidence" name="treasurerResidence">
+                </div>
+            </div>
+
+            <!-- Partnership Section (Initially Hidden) -->
+            <div id="partnershipSection" style="display: none;">
+                <h2>Partnership Information</h2>
+                <div class="form-group">
+                    <label for="partnersNames">Names of Partners/Principals</label>
+                    <textarea id="partnersNames" name="partnersNames" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="partnersResidences">Legal Residence of Partners/Principals</label>
+                    <textarea id="partnersResidences" name="partnersResidences" rows="4"></textarea>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <a href="company-info.html" class="button secondary">Previous</a>
+                <a href="certifications.html" class="button" onclick="return handleFormNavigation(event, 'next')">Next</a>
+            </div>
+        </form>
+    </div>
+    <script src="../js/script.js"></script>
+    <script>
+        // Add real-time validation
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('blur', function() {
+                validateField(this);
+            });
+        });
+    </script>
+    <script>
+        // Handle organization type selection
+        document.getElementById('organizationType').addEventListener('change', function() {
+            const corporateSection = document.getElementById('corporateSection');
+            const partnershipSection = document.getElementById('partnershipSection');
+            
+            corporateSection.style.display = 'none';
+            partnershipSection.style.display = 'none';
+            
+            if (this.value === 'corporation') {
+                corporateSection.style.display = 'block';
+            } else if (this.value === 'partnership') {
+                partnershipSection.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
