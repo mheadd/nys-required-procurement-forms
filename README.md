@@ -1,9 +1,12 @@
 # NYS ITS Required Forms Application
 
-This is a multi-page web application for collecting and generating the required procurement forms for New York State Information Technology Services (NYS ITS).
+This is a **prototype** multi-page web application for collecting and generating the required procurement forms for New York State Information Technology Services (NYS ITS).
+
+> **Note:**  
+> This application is a prototype and is **not an official application of New York State ITS**. It is intended for demonstration and development purposes only.
 
 ## Features
-- Step-by-step collection of all required company, personnel, and certification information
+- Step-by-step collection of [all required company, personnel, and certification information](unique-data-elements.md)
 - Real-time form validation and user-friendly error messages
 - Data is saved in the browser (localStorage) so progress is not lost
 - Conditional fields and sections based on user input
@@ -44,4 +47,5 @@ For a smoother local development experience, you can use [`lite-server`](https:/
 - Works in all modern browsers
 
 ---
-Developed for NYS ITS procurement compliance and workflow improvement.
+Developed for NYS ITS procurement compliance and workflow improvement.  
+**This is not an official NY State ITS application.**
