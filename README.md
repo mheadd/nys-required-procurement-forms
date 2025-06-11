@@ -5,6 +5,8 @@ This is a **prototype** multi-page web application for collecting and generating
 > **Note:**  
 > This application is a prototype and is **not an official application of New York State ITS**. It is intended for demonstration and development purposes only.
 
+![Screenshot of the NYS ITS Required Forms prototype index page](index-page.png)
+
 ## Features
 - Step-by-step collection of [all required company, personnel, and certification information](unique-data-elements.md)
 - Real-time form validation and user-friendly error messages
