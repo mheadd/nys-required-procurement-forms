@@ -11,10 +11,27 @@ This is a multi-page web application for collecting and generating the required 
 - Modern, accessible design matching the ITS.NY.gov aesthetic
 
 ## Usage
-1. Open `index.html` in your web browser (or use a static file server for best results)
+
+### Quick Start
+
+1. **Open `index.html` in your web browser** (or use a static file server for best results)
 2. Complete each section of the form, using the navigation buttons to proceed
 3. Review your information on the summary page
 4. Use your browser's print function to print or save the completed forms
+
+### Local Development with `lite-server`
+
+For a smoother local development experience, you can use [`lite-server`](https://github.com/johnpapa/lite-server):
+
+1. Install dependencies (if not already):
+    ```sh
+    npm install
+    ```
+2. Start the development server:
+    ```sh
+    npm start
+    ```
+3. Open the provided local URL in your browser to use the app.
 
 ## Project Structure
 - `index.html` — Landing page
