@@ -99,6 +99,7 @@
             <div class="navigation">
                 <a href="key-personnel.html" class="button secondary">Previous</a>
                 <a href="final-summary.html" class="button" onclick="return handleFormNavigation(event, 'next')">Next</a>
+                <button type="button" class="button danger" id="clearAllBtn" style="float:right;">Clear All & Start Over</button>
             </div>
         </form>
     </div>
@@ -181,6 +182,14 @@
         // Restore visual state for any pre-selected options
         document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
             handleRadioSelection(radio);
+        });
+
+        // Clear all and start over button
+        document.getElementById('clearAllBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all form data and start over?')) {
+                localStorage.clear();
+                window.location.href = '../index.html';
+            }
         });
     </script>
 </body>

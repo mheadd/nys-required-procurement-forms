@@ -34,6 +34,7 @@
         <div class="navigation">
             <a href="certifications.html" class="button secondary">Previous</a>
             <button type="button" id="generateForms" class="button">Generate Forms</button>
+            <button type="button" class="button danger" id="clearAllBtn" style="float:right;">Clear All & Start Over</button>
         </div>
 
         <div id="generatedForms" style="display: none;">
@@ -322,6 +323,14 @@
                 `;
                 return form;
             }
+
+            // Clear all and start over button
+            document.getElementById('clearAllBtn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all form data and start over?')) {
+                    localStorage.clear();
+                    window.location.href = '../index.html';
+                }
+            });
         });
     </script>
 </body>
